@@ -402,17 +402,25 @@ ${gradingResultText}`.trim();
   };
 
   if (outputPath.match(/^https:\/\/docs\.google\.com\/spreadsheets\//)) {
-    const rows = results.table.body.map((row) => {
+    const headers = [
+      ...results.table.head.vars,
+      ...results.table.head.prompts.map((prompt) => `[${prompt.provider}] ${prompt.label}`)
+    ];
+
+    const rows: CsvRow[] = results.table.body.map((row) => {
       const csvRow: CsvRow = {};
-      results.table.head.vars.forEach((varName, index) => {
-        csvRow[varName] = row.vars[index];
-      });
-      results.table.head.prompts.forEach((prompt, index) => {
-        csvRow[prompt.label] = outputToSimpleString(row.outputs[index]);
+      headers.forEach((header, index) => {
+        if (index < results.table.head.vars.length) {
+          csvRow[header] = row.vars[index];
+        } else {
+          const outputIndex = index - results.table.head.vars.length;
+          csvRow[header] = outputToSimpleString(row.outputs[outputIndex]);
+        }
       });
       return csvRow;
     });
-    await writeCsvToGoogleSheet(rows, outputPath);
+
+    await writeCsvToGoogleSheet([...rows], outputPath);
   } else {
     // Ensure the directory exists
     const outputDir = path.dirname(outputPath);
