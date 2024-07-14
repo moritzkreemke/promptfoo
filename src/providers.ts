@@ -67,11 +67,12 @@ export async function loadApiProviders(
   options: {
     basePath?: string;
     env?: EnvOverrides;
+    useRunningDesigner?: boolean;
   } = {},
 ): Promise<ApiProvider[]> {
   const { basePath, env } = options;
   if (typeof providerPaths === 'string') {
-    return [await loadApiProvider(providerPaths, { basePath, env })];
+    return [await loadApiProvider(providerPaths, { basePath, env, useRunningDesigner: options.useRunningDesigner })];
   } else if (typeof providerPaths === 'function') {
     return [
       {
@@ -83,7 +84,7 @@ export async function loadApiProviders(
     return Promise.all(
       providerPaths.map((provider, idx) => {
         if (typeof provider === 'string') {
-          return loadApiProvider(provider, { basePath, env });
+          return loadApiProvider(provider, { basePath, env, useRunningDesigner: options.useRunningDesigner });
         } else if (typeof provider === 'function') {
           return {
             id: provider.label ? () => provider.label! : () => `custom-function-${idx}`,
@@ -95,13 +96,14 @@ export async function loadApiProviders(
             options: provider,
             basePath,
             env,
+            useRunningDesigner: options.useRunningDesigner
           });
         } else {
           // List of { id: string, config: ProviderConfig } objects
           const id = Object.keys(provider)[0];
           const providerObject = (provider as ProviderOptionsMap)[id];
           const context = { ...providerObject, id: providerObject.id || id };
-          return loadApiProvider(id, { options: context, basePath, env });
+          return loadApiProvider(id, { options: context, basePath, env, useRunningDesigner: options.useRunningDesigner });
         }
       }),
     );
@@ -116,6 +118,7 @@ export async function loadApiProvider(
     options?: ProviderOptions;
     basePath?: string;
     env?: EnvOverrides;
+    useRunningDesigner?: boolean;
   } = {},
 ): Promise<ApiProvider> {
   const { options = {}, basePath, env } = context;
@@ -372,7 +375,7 @@ export async function loadApiProvider(
       ret = new LocalAiChatProvider(modelType, providerOptions);
     }
   } else if (providerPath.startsWith('http:') || providerPath.startsWith('https:')) {
-    ret = new HttpProvider(providerPath, providerOptions);
+    ret = new HttpProvider(providerPath, providerOptions, context.useRunningDesigner);
   } else if (providerPath === 'promptfoo:redteam:iterative') {
     const RedteamIterativeProvider = (await import(path.join(__dirname, './redteam/iterative')))
       .default;

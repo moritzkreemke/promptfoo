@@ -118,6 +118,7 @@ async function resolveConfigs(
     defaultTest: defaultTestRaw ? await readTest(defaultTestRaw, basePath) : undefined,
     outputPath: cmdObj.output || fileConfig.outputPath || defaultConfig.outputPath,
     metadata: fileConfig.metadata || defaultConfig.metadata,
+    useRunningDesigner: cmdObj.useRunningDesigner,
   };
 
   // Validation
@@ -137,6 +138,7 @@ async function resolveConfigs(
   const parsedProviders = await loadApiProviders(config.providers, {
     env: config.env,
     basePath,
+    useRunningDesigner: config.useRunningDesigner || false
   });
   const parsedTests: TestCase[] = await readTests(
     config.tests || [],
@@ -697,6 +699,7 @@ async function main() {
       },
       {},
     )
+    .option('--use-running-designer', 'Use an already running Designer.exe instance')
     .action(async (cmdObj: CommandLineOptions & Command) => {
       setupEnv(cmdObj.envFile);
       let config: Partial<UnifiedConfig> | undefined = undefined;

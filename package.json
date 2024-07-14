@@ -46,7 +46,9 @@
     "db:migrate": "npx tsx src/migrate.ts",
     "db:generate": "npx drizzle-kit generate:sqlite",
     "audit:fix": "npm audit fix && npm audit fix --prefix src/web/nextui && npm audit fix --prefix site",
-    "prepublishOnly": "npm run build:clean && npm run build"
+    "prepublishOnly": "npm run build:clean && npm run build",
+    "eval": "npm --no-proxy run local -- eval --no-cache --max-concurrency 1 --use-running-designer",
+    "view": "npm --no-proxy run local view"
   },
   "peerDependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.458.0",
@@ -106,6 +108,7 @@
     "ajv": "^8.16.0",
     "ajv-formats": "^2.1.1",
     "async": "^3.2.5",
+    "axios": "^1.7.2",
     "better-sqlite3": "^11.0.0",
     "cache-manager": "^4.1.0",
     "cache-manager-fs-hash": "^1.0.0",

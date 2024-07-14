@@ -1,0 +1,43 @@
+# Learn more about building a configuration: https://promptfoo.dev/docs/configuration/guide
+description: "My eval"
+
+prompts:
+  - "{{prompt}}"
+  
+
+providers:
+  - id: 'http://localhost:9000/api/smartassistent?key=gpt4o-simple'
+    config:
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'  
+      body:
+        prompt: '{{prompt}}'
+        project: '{{project}}'
+        execute_test: '{{execute_test}}'
+        test_cases: '{{test_cases}}'
+  - id: 'http://localhost:9000/api/smartassistent?key=gpt432k-simple'
+    config:
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'  
+      body:
+        prompt: '{{prompt}}'
+        project: '{{project}}'
+        execute_test: '{{execute_test}}'
+        test_cases: '{{test_cases}}'
+  - id: 'http://localhost:9000/api/smartassistent?key=clude35-simple'
+    config:
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'  
+      body:
+        prompt: '{{prompt}}'
+        project: '{{project}}'
+        execute_test: '{{execute_test}}'
+        test_cases: '{{test_cases}}'
+  
+
+tests: https://docs.google.com/spreadsheets/d/1UquDk7X30_OFil19LjrbHokZqvQjKYXRZi8iyJVtW0I/edit
+outputPath: https://docs.google.com/spreadsheets/d/1OWsuvisrUnbnbipiO8O4f_l5nAw72XnnXqY7cmBeFVY/edit?usp=sharing
+

@@ -34,6 +34,7 @@ export interface CommandLineOptions {
   filterFirstN?: string;
   filterPattern?: string;
   var?: Record<string, string>;
+  useRunningDesigner?: boolean;
 
   generateSuggestions?: boolean;
   promptPrefix?: string;
@@ -265,6 +266,7 @@ export interface EvaluateOptions {
   cache?: boolean;
   eventSource?: string;
   interactiveProviders?: boolean;
+  useRunningDesigner?: boolean;
 }
 
 export interface Prompt {
@@ -668,6 +670,8 @@ export interface TestSuiteConfig {
 
   // Any other information about this configuration.
   metadata?: Record<string, any>;
+
+  useRunningDesigner?: boolean;
 }
 
 export type UnifiedConfig = TestSuiteConfig & {
